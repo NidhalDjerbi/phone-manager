@@ -40,11 +40,7 @@ export default function ListPhones({ phones, handleEdit, handleDelete }) {
                 </td>
                 <td className="p-4 text-gray-700">{phone.brand}</td>
                 <td className="p-4">
-                  <span
-                    className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium text-white `}
-                  >
-                    {phone.color}
-                  </span>
+                  {phone.color}
                 </td>
                 <td className="p-4 text-gray-700">{phone.capacity} GO</td>
                 <td className="p-4 text-gray-600">

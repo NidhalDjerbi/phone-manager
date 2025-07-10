@@ -4,6 +4,7 @@ import { phoneSchema } from "../utils/phoneSchema";
 function PhoneForm({
   initialData = null,
   onSubmit,
+  onReset,
   editingPhone = false,
   isPending,
   submitLabel = "Envoyer",
@@ -18,15 +19,13 @@ function PhoneForm({
   const [errors, setErrors] = useState({});
 
   useEffect(() => {
-    if (initialData) {
       setFormData({
-        brand: initialData.brand || "",
-        imei: initialData.imei || "",
-        name: initialData.name || "",
-        color: initialData.color || "Rouge",
-        capacity: initialData.capacity?.toString() || "",
+        brand: initialData?.brand ?? "",
+        imei: initialData?.imei ?? "",
+        name: initialData?.name ?? "",
+        color: initialData?.color ?? "",
+        capacity: initialData?.capacity?.toString() ?? "",
       });
-    }
   }, [initialData]);
 
   const handleChange = (e) => {
@@ -46,7 +45,7 @@ function PhoneForm({
     const result = phoneSchema.safeParse(parsedData);
     if (!result.success) {
       const fieldErrors = {};
-      result.error.errors.forEach((err) => {
+      result.error.issues?.forEach((err) => {
         fieldErrors[err.path[0]] = err.message;
       });
       setErrors(fieldErrors);
@@ -54,6 +53,18 @@ function PhoneForm({
     }
 
     onSubmit(parsedData);
+  };
+
+  const handleReset = () => {
+    () => setFormData({
+      brand: "",
+      imei: "",
+      name: "",
+      color: "",
+      capacity: "",
+    })
+    setErrors({});
+    onReset?.();
   };
 
   return (
@@ -66,9 +77,19 @@ function PhoneForm({
               : "Ajouter un nouveau téléphone"}
           </h2>
 
+          <div className="flex gap-4">
+            <button
+            type="reset"
+            disabled={isPending}
+            onClick={handleReset}
+            className={`bg-gray-200 text-gray-800 px-8 py-2 rounded-lg hover:bg-gray-300 transition`}
+          >
+            Réinitialiser
+          </button>
+          
+
           <button
             type="submit"
-            hidden={submitLabel === "Mettre à jour"}
             disabled={isPending}
             className={`px-8 py-2 rounded-lg font-semibold transition-colors ${
               isPending
@@ -78,6 +99,7 @@ function PhoneForm({
           >
             {isPending ? "Chargement..." : submitLabel}
           </button>
+          </div>
         </div>
 
         <div>
@@ -85,12 +107,13 @@ function PhoneForm({
             Marque
           </label>
           <input
-            type="text"
-            value={formData.name}
-            onChange={handleChange}
+            name="brand"
+            value={formData.brand}
             placeholder="Ex: iPhone, Samsung Galaxy"
             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            onChange={handleChange}
           />
+          {errors.brand && <p style={{ color: "red" }}>{errors.brand}</p>}
         </div>
 
         <div>
@@ -116,12 +139,14 @@ function PhoneForm({
             Nom du téléphone
           </label>
           <input
+            name="name"
             type="text"
             value={formData.name}
             onChange={handleChange}
             placeholder="Ex: iPhone 15 Pro"
             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           />
+          {errors.name && <p style={{ color: "red" }}>{errors.name}</p>}
         </div>
 
         <div>
@@ -129,24 +154,27 @@ function PhoneForm({
             Couleur
           </label>
           <input
+            name="color"
             type="text"
-            value={formData.name}
+            value={formData.color}
             onChange={handleChange}
             placeholder="Rouge ou Bleu"
             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           />
+          {errors.color && <p style={{ color: "red" }}>{errors.color}</p>}
         </div>
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
             Capacité (GO)
           </label>
           <input
+            name="capacity"
             type="number"
             value={formData.capacity}
             onChange={(e) =>
               setFormData({
                 ...formData,
-                capacity: parseInt(e.target.value) || 0,
+                capacity: parseInt(e.target.value) ?? '',
               })
             }
             placeholder="Ex: 128"
@@ -157,6 +185,7 @@ function PhoneForm({
           <div className="text-xs text-gray-500 mt-1">
             Doit être un multiple de 2 et supérieur à 0
           </div>
+          {errors.capacity && <p style={{ color: "red" }}>{errors.capacity}</p>}
         </div>
       </form>
     </div>

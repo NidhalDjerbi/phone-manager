@@ -70,7 +70,7 @@ cd frontend
 npm start
 ```
 
-9. Lancer l'application via docker-compose (alternative plus simple):
+## Lancer l'application via docker-compose (alternative plus simple):
 
 ```bash
 docker-compose up --build

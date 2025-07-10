@@ -1,25 +1,29 @@
 import { useState } from "react";
+import { toast } from "sonner";
 import { usePhones } from "../services/usePhones";
 import { useCreatePhone } from "../services/useCreatePhone";
 import { useUpdatePhone } from "../services/useUpdatePhone";
 import { useDeletePhone } from "../services/useDeletePhone";
 import PhoneForm from "../components/PhoneForm";
-import ListPhones from "./ListPhones";
+import ListPhones from "../components/ListPhones";
 
 function PhonePage() {
   const { data, isLoading, error } = usePhones();
   const [editingPhone, setEditingPhone] = useState(null);
 
-  const createPhoneMutation = useCreatePhone(() => setEditingPhone(null));
+  const createPhoneMutation = useCreatePhone(() => {
+    setEditingPhone(null)
+    toast("Phone ajouté avec succès", { type: "success" });
+  }, (error) => {
+    const message = error.response?.data?.error || error.message;
+    toast(`Erreur lors de l'ajout du téléphone : ${message}`, { type: "error" });
+  });
+
   const updatePhoneMutation = useUpdatePhone(() => setEditingPhone(null));
   const deletePhoneMutation = useDeletePhone();
 
   const handleEdit = (phone) => {
     setEditingPhone(phone);
-  };
-
-  const handleCancelEdit = () => {
-    setEditingPhone(null);
   };
 
   const handleSubmit = (formData) => {
@@ -29,6 +33,10 @@ function PhonePage() {
       createPhoneMutation.mutate(formData);
     }
   };
+
+  const handleReset = () => {
+    setEditingPhone(null); 
+  }
 
   const handleDelete = (id) => {
     if (window.confirm("Supprimer ce téléphone ?")) {
@@ -44,6 +52,7 @@ function PhonePage() {
       <PhoneForm
         initialData={editingPhone}
         onSubmit={handleSubmit}
+        onReset={handleReset}
         editingPhone={editingPhone}
         isPending={
           createPhoneMutation.isPending ||
@@ -52,23 +61,6 @@ function PhonePage() {
         }
         submitLabel={editingPhone ? "Mettre à jour" : "Ajouter"}
       />
-
-      {editingPhone && (
-        <div className="flex justify-center gap-4 my-4">
-          <button
-            onClick={handleSubmit}
-            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
-          >
-            Mettre à jour
-          </button>
-          <button
-            onClick={handleCancelEdit}
-            className="bg-gray-200 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-300 transition"
-          >
-            Annuler la modification
-          </button>
-        </div>
-      )}
 
       <ListPhones
         phones={data}
