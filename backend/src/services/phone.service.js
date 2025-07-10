@@ -1,6 +1,3 @@
-// service phone service
-
-import AppError from "../utils/errors.js";
 import PhoneRepository from "../repositories/phone.repository.js";
 const phoneRepository = new PhoneRepository();
 export class PhoneService {

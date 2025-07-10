@@ -1,6 +1,4 @@
-import { z } from "Zod";
-
-
+import { z } from "zod";
 export const phoneSchema = z.object({
   imei: z
     .string()
@@ -15,5 +13,3 @@ export const phoneSchema = z.object({
     .positive("La capacité doit être supérieure à zéro")
     .refine((val) => val % 2 === 0, "La capacité doit être un multiple de 2"),
 });
-
-// export const phoneJsonSchema = zodToJsonSchema(phoneSchema);
