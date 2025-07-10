@@ -16,7 +16,7 @@ Phone-manager est une application web permettant la gestion des téléphones (aj
 1. Cloner le dépôt :
 
 ```bash
-git clone <[url-du-repo](https://github.com/NidhalDjerbi/phone-manager.git)>
+git clone https://github.com/NidhalDjerbi/phone-manager.git
 ```
 
 2. Installer les dépendances en local pour backend et frontend :
@@ -70,7 +70,7 @@ cd frontend
 npm start
 ```
 
-9. Lancer l'application via docker-compose:
+9. Lancer l'application via docker-compose (alternative plus simple):
 
 ```bash
 docker-compose up --build
