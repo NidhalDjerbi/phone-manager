@@ -11,7 +11,8 @@ function PhonePage() {
   const { data, isLoading, error } = usePhones();
   const [editingPhone, setEditingPhone] = useState(null);
 
-  const createPhoneMutation = useCreatePhone(() => {
+  const createPhoneMutation = useCreatePhone(
+    (data) => {
     setEditingPhone(null)
     toast("Phone ajouté avec succès", { type: "success" });
   }, (error) => {
@@ -19,8 +20,26 @@ function PhonePage() {
     toast(`Erreur lors de l'ajout du téléphone : ${message}`, { type: "error" });
   });
 
-  const updatePhoneMutation = useUpdatePhone(() => setEditingPhone(null));
-  const deletePhoneMutation = useDeletePhone();
+  const updatePhoneMutation = useUpdatePhone(
+    (data) => {
+      setEditingPhone(null);
+      toast("Téléphone mis à jour avec succès", { type: "success" });
+    },
+    (error) => {
+      const message = error.response?.data?.error || error.message;
+      toast(`Erreur lors de la mise à jour du téléphone : ${message}`, { type: "error" });
+    }
+  );
+  const deletePhoneMutation = useDeletePhone(
+    (id) => {
+      setEditingPhone(null);
+      toast("Téléphone supprimé avec succès", { type: "success" });
+    },
+    (error) => {
+      const message = error.response?.data?.error || error.message;
+      toast(`Erreur lors de la suppression du téléphone : ${message}`, { type: "error" });
+    }
+  );
 
   const handleEdit = (phone) => {
     setEditingPhone(phone);
@@ -35,7 +54,7 @@ function PhonePage() {
   };
 
   const handleReset = () => {
-    setEditingPhone(null); 
+    setEditingPhone(null);
   }
 
   const handleDelete = (id) => {

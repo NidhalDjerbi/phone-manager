@@ -19,13 +19,14 @@ function PhoneForm({
   const [errors, setErrors] = useState({});
 
   useEffect(() => {
-      setFormData({
-        brand: initialData?.brand ?? "",
-        imei: initialData?.imei ?? "",
-        name: initialData?.name ?? "",
-        color: initialData?.color ?? "",
-        capacity: initialData?.capacity?.toString() ?? "",
-      });
+    setFormData({
+      brand: initialData?.brand ?? "",
+      imei: initialData?.imei ?? "",
+      name: initialData?.name ?? "",
+      color: initialData?.color ?? "",
+      capacity: initialData?.capacity?.toString() ?? "",
+    });
+    setErrors({});
   }, [initialData]);
 
   const handleChange = (e) => {
@@ -56,7 +57,7 @@ function PhoneForm({
   };
 
   const handleReset = () => {
-    () => setFormData({
+    setFormData({
       brand: "",
       imei: "",
       name: "",

@@ -67,7 +67,7 @@ npm run dev
 
 ```bash
 cd frontend
-npm start
+npm run dev
 ```
 
 ## Lancer l'application via docker-compose (alternative plus simple):
