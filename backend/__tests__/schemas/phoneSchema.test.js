@@ -1,4 +1,4 @@
-import { phoneSchema } from "../../validators/phone.validator";
+import { phoneSchema } from "../../src/validators/phone.validator";
 describe("phoneSchema", () => {
   it("valide un objet correct", () => {
     const validPhone = {
